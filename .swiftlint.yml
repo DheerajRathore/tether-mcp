@@ -1,0 +1,7 @@
+excluded:
+  - .build
+  - DerivedData
+  - Packages
+disabled_rules:
+  - todo
+line_length: 140
