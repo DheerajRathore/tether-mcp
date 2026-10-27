@@ -1,0 +1,22 @@
+name: PR description
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  PR-description:
+    name: PR description
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const body = (context.payload.pull_request.body || '')
+              .replace(/<!--[\s\S]*?-->/g, '')
+              .replace(/^#+.*$/gm, '')
+              .replace(/- \[[ x]\].*$/gm, '')
+              .trim();
+            if (body.length < 20) {
+              core.setFailed('Please describe what the PR does and how it was tested.');
+            }
