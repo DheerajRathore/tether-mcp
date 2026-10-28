@@ -2,6 +2,8 @@ excluded:
   - .build
   - DerivedData
   - Packages
+  - Tether/TetherTests
+  - Tether/TetherUITests
 disabled_rules:
   - todo
 line_length: 140
