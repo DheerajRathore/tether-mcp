@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D1B9C2613092272F009ABFBB /* tether-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = D1B9C259309226DB009ABFBB /* tether-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D1F6429330937DC800CA0F25 /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D1F6429230937DC800CA0F25 /* MCP */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		D1B9C22A30922573009ABFBB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				D1F6429330937DC800CA0F25 /* MCP in Frameworks */,
 			);
 		};
 		D1B9C23730922575009ABFBB /* Frameworks */ = {
@@ -107,6 +109,7 @@
 				D1B9C23D30922575009ABFBB /* TetherTests */,
 				D1B9C24730922575009ABFBB /* TetherUITests */,
 				D1B9C25A309226DB009ABFBB /* tether-cli */,
+				D1F6429130937DC800CA0F25 /* Frameworks */,
 				D1B9C22E30922573009ABFBB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -120,6 +123,13 @@
 				D1B9C259309226DB009ABFBB /* tether-cli */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D1F6429130937DC800CA0F25 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +150,9 @@
 				D1B9C22F30922573009ABFBB /* Tether */,
 			);
 			name = Tether;
+			packageProductDependencies = (
+				D1F6429230937DC800CA0F25 /* MCP */,
+			);
 			productName = Tether;
 			productReference = D1B9C22D30922573009ABFBB /* Tether.app */;
 			productType = "com.apple.product-type.application";
@@ -673,6 +686,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D1F6429230937DC800CA0F25 /* MCP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1B9C26230922766009ABFBB /* XCRemoteSwiftPackageReference "swift-sdk" */;
+			productName = MCP;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D1B9C22530922573009ABFBB /* Project object */;
 	validationLevel = 1;
