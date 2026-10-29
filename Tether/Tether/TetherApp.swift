@@ -9,15 +9,21 @@ import SwiftUI
 
 @main
 struct TetherApp: App {
-    @AppStorage("serverEnabled") private var serverEnabled = false
+    @State private var controller = ServerController()
 
     var body: some Scene {
         MenuBarExtra("Tether", systemImage: "link") {
             VStack(alignment: .leading, spacing: 12) {
-                Toggle("Enable MCP server", isOn: $serverEnabled)
-                Text(serverEnabled ? "Server running" : "Server stopped")
+                Toggle("Enable MCP server", isOn: Binding(
+                    get: { controller.isRunning },
+                    set: { controller.setEnabled($0) }
+                ))
+                Text(controller.isRunning ? "Server running" : "Server stopped")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if let error = controller.errorMessage {
+                    Text(error).font(.caption).foregroundStyle(.red)
+                }
                 Divider()
                 Button("Quit Tether") { NSApplication.shared.terminate(nil) }
             }
