@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D14BBD963094CAFA00DBDDDB /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D14BBD953094CAFA00DBDDDB /* MCP */; };
 		D1B9C2613092272F009ABFBB /* tether-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = D1B9C259309226DB009ABFBB /* tether-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D1F6429330937DC800CA0F25 /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D1F6429230937DC800CA0F25 /* MCP */; };
 /* End PBXBuildFile section */
@@ -97,6 +98,7 @@
 		D1B9C256309226DB009ABFBB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				D14BBD963094CAFA00DBDDDB /* MCP in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -213,6 +215,9 @@
 				D1B9C25A309226DB009ABFBB /* tether-cli */,
 			);
 			name = "tether-cli";
+			packageProductDependencies = (
+				D14BBD953094CAFA00DBDDDB /* MCP */,
+			);
 			productName = "tether-cli";
 			productReference = D1B9C259309226DB009ABFBB /* tether-cli */;
 			productType = "com.apple.product-type.tool";
@@ -688,6 +693,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D14BBD953094CAFA00DBDDDB /* MCP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1B9C26230922766009ABFBB /* XCRemoteSwiftPackageReference "swift-sdk" */;
+			productName = MCP;
+		};
 		D1F6429230937DC800CA0F25 /* MCP */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1B9C26230922766009ABFBB /* XCRemoteSwiftPackageReference "swift-sdk" */;

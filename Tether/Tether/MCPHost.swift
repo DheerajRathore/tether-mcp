@@ -40,15 +40,43 @@ actor MCPHost {
         )
         await registerTools(on: server)
         do {
-            try await server.start(transport: NetworkTransport(connection: connection))
+//            try await server.start(transport: NetworkTransport(connection: connection))
+            try await server.start(transport: NetworkTransport(connection: connection, heartbeatConfig: .disabled))
             sessions[ObjectIdentifier(connection)] = (connection, server)
         } catch {
             connection.cancel()
         }
     }
 
+//    private func registerTools(on server: Server) async {
+//        await server.withMethodHandler(CallTool.self) { params in
+//            guard params.name == "ping" else {
+//                let message = "Unknown tool: \(params.name)"
+//                return CallTool.Result(
+//                    content: [.text(text: message, annotations: nil, _meta: nil)],
+//                    isError: true
+//                )
+//            }
+//            return CallTool.Result(
+//                content: [.text(text: "pong", annotations: nil, _meta: nil)],
+//                isError: false
+//            )
+//        }
+//    }
+
     private func registerTools(on server: Server) async {
+        await server.withMethodHandler(ListTools.self) { _ in
+            print("ListTools called")
+            let ping = Tool(
+                name: "ping",
+                description: "Health check. Returns pong.",
+                inputSchema: .object(["type": .string("object"), "properties": .object([:])])
+            )
+            return ListTools.Result(tools: [ping])
+        }
+
         await server.withMethodHandler(CallTool.self) { params in
+            print("CallTool called:", params.name)
             guard params.name == "ping" else {
                 let message = "Unknown tool: \(params.name)"
                 return CallTool.Result(
