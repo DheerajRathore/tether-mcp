@@ -22,8 +22,13 @@ final class NotesAccess {
     private(set) var folderURL: URL?
     private(set) var summaryText: String?
     private let bookmarkKey = "notesFolderBookmark"
+    @ObservationIgnored var onFolderChange: ((URL?) -> Void)?
 
     init() { restore() }
+
+    func publishCurrentFolder() {
+        onFolderChange?(folderURL)
+    }
 
     func chooseFolder() {
         let panel = NSOpenPanel()
@@ -58,6 +63,7 @@ final class NotesAccess {
         folderURL = nil
         UserDefaults.standard.removeObject(forKey: bookmarkKey)
         summaryText = nil
+        onFolderChange?(nil)
         status = .notChosen
     }
 
@@ -84,6 +90,7 @@ final class NotesAccess {
         if url.startAccessingSecurityScopedResource() {
             folderURL = url
             status = .connected
+            onFolderChange?(url)
             refreshSummary()
         } else {
             status = .error("macOS denied access to the folder.")

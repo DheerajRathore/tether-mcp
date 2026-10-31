@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct TetherApp: App {
     @State private var controller = ServerController()
-    @State private var notes = NotesAccess()
+    private var notes: NotesAccess { controller.notes }
 
     var body: some Scene {
         MenuBarExtra("Tether", systemImage: "link") {

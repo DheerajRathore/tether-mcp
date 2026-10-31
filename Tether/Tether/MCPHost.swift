@@ -12,6 +12,7 @@ import Network
 actor MCPHost {
     private var listener: NWListener?
     private var sessions: [ObjectIdentifier: (NWConnection, Server)] = [:]
+    private var notesFolder: URL?
 
     func start() throws {
         guard listener == nil else { return }
@@ -48,46 +49,86 @@ actor MCPHost {
         }
     }
 
-//    private func registerTools(on server: Server) async {
-//        await server.withMethodHandler(CallTool.self) { params in
-//            guard params.name == "ping" else {
-//                let message = "Unknown tool: \(params.name)"
-//                return CallTool.Result(
-//                    content: [.text(text: message, annotations: nil, _meta: nil)],
-//                    isError: true
-//                )
-//            }
-//            return CallTool.Result(
-//                content: [.text(text: "pong", annotations: nil, _meta: nil)],
-//                isError: false
-//            )
-//        }
-//    }
+    func setNotesFolder(_ url: URL?) { notesFolder = url }
 
     private func registerTools(on server: Server) async {
         await server.withMethodHandler(ListTools.self) { _ in
-            print("ListTools called")
-            let ping = Tool(
-                name: "ping",
-                description: "Health check. Returns pong.",
-                inputSchema: .object(["type": .string("object"), "properties": .object([:])])
-            )
-            return ListTools.Result(tools: [ping])
+            ListTools.Result(tools: [Self.pingTool(), Self.searchTool()])
         }
+        await server.withMethodHandler(CallTool.self) { [weak self] params in
+            guard let self else { return Self.errorResult("Server stopped") }
+            return await self.call(name: params.name, arguments: params.arguments)
+        }
+    }
 
-        await server.withMethodHandler(CallTool.self) { params in
-            print("CallTool called:", params.name)
-            guard params.name == "ping" else {
-                let message = "Unknown tool: \(params.name)"
-                return CallTool.Result(
-                    content: [.text(text: message, annotations: nil, _meta: nil)],
-                    isError: true
-                )
-            }
-            return CallTool.Result(
-                content: [.text(text: "pong", annotations: nil, _meta: nil)],
-                isError: false
-            )
+    private func call(name: String, arguments: [String: Value]?) -> CallTool.Result {
+        switch name {
+        case "ping": return Self.textResult("pong")
+        case "notes_search": return searchNotes(arguments)
+        default: return Self.errorResult("Unknown tool: \(name)")
         }
+    }
+
+    private func searchNotes(_ arguments: [String: Value]?) -> CallTool.Result {
+        guard let folder = notesFolder else {
+            return Self.errorResult("Notes folder not connected. Open Tether and choose the Notes folder.")
+        }
+        let options = NotesDatabase.SearchOptions(
+            query: arguments?["query"]?.stringValue,
+            folder: arguments?["folder"]?.stringValue,
+            since: Self.parseDate(arguments?["since"]?.stringValue),
+            limit: min(max(arguments?["limit"]?.intValue ?? 25, 1), 50)
+        )
+        do {
+            let notes = try NotesDatabase.search(folder: folder, options: options)
+            let data = try JSONEncoder().encode(notes)
+            guard let json = String(data: data, encoding: .utf8) else {
+                return Self.errorResult("Could not encode search results.")
+            }
+            return Self.textResult(json)
+        } catch {
+            return Self.errorResult(error.localizedDescription)
+        }
+    }
+
+    private static func parseDate(_ text: String?) -> Date? {
+        guard let text else { return nil }
+        if let full = ISO8601DateFormatter().date(from: text) { return full }
+        let dayOnly = ISO8601DateFormatter()
+        dayOnly.formatOptions = [.withFullDate]
+        return dayOnly.date(from: text)
+    }
+
+    private static func textResult(_ text: String) -> CallTool.Result {
+        CallTool.Result(content: [.text(text: text, annotations: nil, _meta: nil)], isError: false)
+    }
+
+    private static func errorResult(_ text: String) -> CallTool.Result {
+        CallTool.Result(content: [.text(text: text, annotations: nil, _meta: nil)], isError: true)
+    }
+
+    private static func pingTool() -> Tool {
+        Tool(
+            name: "ping",
+            description: "Health check. Returns pong.",
+            inputSchema: .object(["type": .string("object"), "properties": .object([:])])
+        )
+    }
+
+    private static func searchTool() -> Tool {
+        Tool(
+            name: "notes_search",
+            description: "Search Apple Notes by title. Returns id, title, folder, modified date and a locked flag. "
+                + "Does not return note contents.",
+            inputSchema: .object([
+                "type": .string("object"),
+                "properties": .object([
+                    "query": .object(["type": .string("string"), "description": .string("Text to find in titles")]),
+                    "folder": .object(["type": .string("string"), "description": .string("Exact folder name")]),
+                    "since": .object(["type": .string("string"), "description": .string("Only notes modified after this ISO date")]),
+                    "limit": .object(["type": .string("integer"), "description": .string("Max results, default 25, max 50")])
+                ])
+            ])
+        )
     }
 }

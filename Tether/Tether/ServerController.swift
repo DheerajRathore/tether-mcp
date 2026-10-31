@@ -14,6 +14,15 @@ final class ServerController {
     var isRunning = false
     var errorMessage: String?
     private let host = MCPHost()
+    let notes = NotesAccess()
+
+    init() {
+        let host = self.host
+        notes.onFolderChange = { url in
+            Task { await host.setNotesFolder(url) }
+        }
+        notes.publishCurrentFolder()
+    }
 
     func setEnabled(_ enabled: Bool) {
         Task {
