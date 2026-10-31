@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct TetherApp: App {
     @State private var controller = ServerController()
+    @State private var notes = NotesAccess()
 
     var body: some Scene {
         MenuBarExtra("Tether", systemImage: "link") {
@@ -24,6 +25,23 @@ struct TetherApp: App {
                 if let error = controller.errorMessage {
                     Text(error).font(.caption).foregroundStyle(.red)
                 }
+
+                Divider()
+                Text("Notes").font(.headline)
+                switch notes.status {
+                case .notChosen:
+                    Button("Choose Notes folder…") { notes.chooseFolder() }
+                case .connected:
+                    HStack {
+                        Text("Connected").font(.caption).foregroundStyle(.green)
+                        Spacer()
+                        Button("Forget") { notes.forget() }.buttonStyle(.link)
+                    }
+                case .error(let message):
+                    Text(message).font(.caption).foregroundStyle(.red)
+                    Button("Choose Notes folder…") { notes.chooseFolder() }
+                }
+
                 Divider()
                 Button("Quit Tether") { NSApplication.shared.terminate(nil) }
             }
