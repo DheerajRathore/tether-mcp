@@ -37,6 +37,9 @@ struct TetherApp: App {
                         Spacer()
                         Button("Forget") { notes.forget() }.buttonStyle(.link)
                     }
+                    if let summary = notes.summaryText {
+                        Text(summary).font(.caption).foregroundStyle(.secondary)
+                    }
                 case .error(let message):
                     Text(message).font(.caption).foregroundStyle(.red)
                     Button("Choose Notes folder…") { notes.chooseFolder() }

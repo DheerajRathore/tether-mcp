@@ -20,6 +20,7 @@ final class NotesAccess {
 
     private(set) var status: Status = .notChosen
     private(set) var folderURL: URL?
+    private(set) var summaryText: String?
     private let bookmarkKey = "notesFolderBookmark"
 
     init() { restore() }
@@ -56,6 +57,7 @@ final class NotesAccess {
         folderURL?.stopAccessingSecurityScopedResource()
         folderURL = nil
         UserDefaults.standard.removeObject(forKey: bookmarkKey)
+        summaryText = nil
         status = .notChosen
     }
 
@@ -82,6 +84,7 @@ final class NotesAccess {
         if url.startAccessingSecurityScopedResource() {
             folderURL = url
             status = .connected
+            refreshSummary()
         } else {
             status = .error("macOS denied access to the folder.")
         }
@@ -91,5 +94,18 @@ final class NotesAccess {
         // In a sandbox, NSHomeDirectory() is the app container, so ask for the real home.
         guard let entry = getpwuid(getuid()) else { return NSHomeDirectory() }
         return String(cString: entry.pointee.pw_dir)
+    }
+
+    func refreshSummary() {
+        guard let folder = folderURL else { summaryText = nil; return }
+        Task {
+            do {
+                let summary = try await Task.detached { try NotesDatabase.summarize(folder: folder) }.value
+                summaryText = "\(summary.total) notes (\(summary.locked) locked)"
+            } catch {
+                summaryText = nil
+                status = .error(error.localizedDescription)
+            }
+        }
     }
 }
