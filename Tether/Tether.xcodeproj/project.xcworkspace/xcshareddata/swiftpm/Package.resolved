@@ -1,5 +1,5 @@
 {
-  "originHash" : "8c8d0c0131df1ccfdceabd47c653159a02aee3b3454fa84aa99cca642e15a568",
+  "originHash" : "c382fd3873c8f22d16e86e636f9f2d5352ea5ede851da1f2553a07bff253687d",
   "pins" : [
     {
       "identity" : "eventsource",
@@ -62,6 +62,15 @@
       "state" : {
         "revision" : "869129b7bf4ecc57b97d0193ad29690ca2134750",
         "version" : "1.8.1"
+      }
+    },
+    {
+      "identity" : "topotext",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattt/TopoText",
+      "state" : {
+        "revision" : "69aa77928f0eb85d98dff819f5459e893294bd71",
+        "version" : "0.2.0"
       }
     }
   ],

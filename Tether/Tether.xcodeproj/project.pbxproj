@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D14BBD963094CAFA00DBDDDB /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D14BBD953094CAFA00DBDDDB /* MCP */; };
+		D17B08EA3098CD8F004AC5C8 /* TopoText in Frameworks */ = {isa = PBXBuildFile; productRef = D17B08E93098CD8F004AC5C8 /* TopoText */; };
 		D1B9C2613092272F009ABFBB /* tether-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = D1B9C259309226DB009ABFBB /* tether-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D1F6429330937DC800CA0F25 /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D1F6429230937DC800CA0F25 /* MCP */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			files = (
 				D1F6429330937DC800CA0F25 /* MCP in Frameworks */,
+				D17B08EA3098CD8F004AC5C8 /* TopoText in Frameworks */,
 			);
 		};
 		D1B9C23730922575009ABFBB /* Frameworks */ = {
@@ -154,6 +156,7 @@
 			name = Tether;
 			packageProductDependencies = (
 				D1F6429230937DC800CA0F25 /* MCP */,
+				D17B08E93098CD8F004AC5C8 /* TopoText */,
 			);
 			productName = Tether;
 			productReference = D1B9C22D30922573009ABFBB /* Tether.app */;
@@ -259,6 +262,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D1B9C26230922766009ABFBB /* XCRemoteSwiftPackageReference "swift-sdk" */,
+				D17B08E83098CD01004AC5C8 /* XCRemoteSwiftPackageReference "TopoText" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D1B9C22E30922573009ABFBB /* Products */;
@@ -477,7 +481,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15;
+				MACOSX_DEPLOYMENT_TARGET = 15.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dheeraj.Tether;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -522,7 +526,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15;
+				MACOSX_DEPLOYMENT_TARGET = 15.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dheeraj.Tether;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -685,6 +689,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D17B08E83098CD01004AC5C8 /* XCRemoteSwiftPackageReference "TopoText" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattt/TopoText";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
 		D1B9C26230922766009ABFBB /* XCRemoteSwiftPackageReference "swift-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/modelcontextprotocol/swift-sdk";
@@ -700,6 +712,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D1B9C26230922766009ABFBB /* XCRemoteSwiftPackageReference "swift-sdk" */;
 			productName = MCP;
+		};
+		D17B08E93098CD8F004AC5C8 /* TopoText */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D17B08E83098CD01004AC5C8 /* XCRemoteSwiftPackageReference "TopoText" */;
+			productName = TopoText;
 		};
 		D1F6429230937DC800CA0F25 /* MCP */ = {
 			isa = XCSwiftPackageProductDependency;
