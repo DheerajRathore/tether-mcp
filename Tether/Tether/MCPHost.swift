@@ -47,10 +47,25 @@ actor MCPHost {
             capabilities: .init(tools: .init(listChanged: false))
         )
         await registerTools(on: server)
+//        do {
+//            try await server.start(
+//                transport: NetworkTransport(connection: connection, heartbeatConfig: .disabled)
+//            )
+//            sessions[ObjectIdentifier(connection)] = (connection, server)
+//        } catch {
+//            connection.cancel()
+//        }
         do {
             try await server.start(
                 transport: NetworkTransport(connection: connection, heartbeatConfig: .disabled)
-            )
+            ) { [weak self] clientInfo, _ in
+                do {
+                    try await Self.authorize(clientName: clientInfo.name)
+                } catch {
+                    await self?.drop(connection)
+                    throw error
+                }
+            }
             sessions[ObjectIdentifier(connection)] = (connection, server)
         } catch {
             connection.cancel()
@@ -203,4 +218,18 @@ actor MCPHost {
             ])
         )
     }
+
+    // MARK: - Helpers:
+
+    private static func authorize(clientName: String) async throws {
+        if TrustStore.isTrusted(clientName) { return }
+        let allowed = await ConnectionApprover.ask(clientName: clientName)
+        guard allowed else { throw MCPError.invalidRequest("Connection denied by the user.") }
+    }
+
+    private func drop(_ connection: NWConnection) {
+        sessions[ObjectIdentifier(connection)] = nil
+        connection.cancel()
+    }
+
 }
