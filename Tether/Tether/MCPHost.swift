@@ -67,6 +67,7 @@ actor MCPHost {
                 }
             }
             sessions[ObjectIdentifier(connection)] = (connection, server)
+            await watch(connection)
         } catch {
             connection.cancel()
         }
@@ -219,6 +220,24 @@ actor MCPHost {
         )
     }
 
+    /// Removes the session once its connection closes.
+    private func watch(_ connection: NWConnection) async {
+        connection.stateUpdateHandler = { [weak self] state in
+            if Self.isClosed(state) {
+                Task { await self?.drop(connection) }
+            }
+        }
+        // The connection may already have closed before the handler was set.
+        if Self.isClosed(connection.state) { await drop(connection) }
+    }
+
+    private static func isClosed(_ state: NWConnection.State) -> Bool {
+        switch state {
+        case .failed, .cancelled: return true
+        default: return false
+        }
+    }
+
     // MARK: - Helpers:
 
     private static func authorize(clientName: String) async throws {
@@ -227,9 +246,13 @@ actor MCPHost {
         guard allowed else { throw MCPError.invalidRequest("Connection denied by the user.") }
     }
 
-    private func drop(_ connection: NWConnection) {
-        sessions[ObjectIdentifier(connection)] = nil
+//    private func drop(_ connection: NWConnection) {
+//        sessions[ObjectIdentifier(connection)] = nil
+//        connection.cancel()
+//    }
+    private func drop(_ connection: NWConnection) async {
+        let session = sessions.removeValue(forKey: ObjectIdentifier(connection))
         connection.cancel()
+        await session?.1.stop()
     }
-
 }
