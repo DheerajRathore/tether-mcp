@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct TetherApp: App {
     @State private var controller = ServerController()
+    @State private var configurator = ClaudeConfigurator()
     private var notes: NotesAccess { controller.notes }
 
     var body: some Scene {
@@ -44,6 +45,10 @@ struct TetherApp: App {
                     Text(message).font(.caption).foregroundStyle(.red)
                     Button("Choose Notes folder…") { notes.chooseFolder() }
                 }
+
+                Divider()
+                Text("Claude Desktop").font(.headline)
+                ClaudeConfigSection(configurator: configurator)
 
                 Divider()
                 Button("Quit Tether") { NSApplication.shared.terminate(nil) }
