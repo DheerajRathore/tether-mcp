@@ -66,3 +66,9 @@ fastlane/test_output
 **/xcshareddata/
 
 *.profraw
+
+
+build/
+dist/
+*.dmg
+*.dmg.sha256
