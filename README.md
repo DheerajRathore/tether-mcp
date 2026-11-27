@@ -75,7 +75,7 @@ Requires macOS and Xcode. (Add the minimum macOS and Xcode versions here.)
 1. Clone the repo and open the Xcode project.
 2. Build and run the **Tether** scheme. The app appears in the menu bar.
 3. Follow **Set up** above. The Configure button writes the path of the CLI inside your build.
-4. To build a release image: `./scripts/build-dmg.sh 0.1.0`
+4. To build a release image: `/Tether/scripts/build-dmg.sh 0.1.0`
 
 ## Roadmap
 
