@@ -10,7 +10,7 @@ import Foundation
 /// Remembers which MCP clients the user chose to always trust.
 struct TrustStore: Sendable {
     private static let key = "trustedClients"
-
+    static var count: Int { trusted().count }
     static func isTrusted(_ name: String) -> Bool {
         trusted().contains(name)
     }

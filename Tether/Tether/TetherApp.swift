@@ -51,6 +51,10 @@ struct TetherApp: App {
                 ClaudeConfigSection(configurator: configurator)
 
                 Divider()
+                Text("Trusted clients").font(.headline)
+                TrustedClientsSection()
+
+                Divider()
                 Button("Quit Tether") { NSApplication.shared.terminate(nil) }
             }
             .padding(12)
