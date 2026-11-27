@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D14BBD963094CAFA00DBDDDB /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D14BBD953094CAFA00DBDDDB /* MCP */; };
 		D17B08EA3098CD8F004AC5C8 /* TopoText in Frameworks */ = {isa = PBXBuildFile; productRef = D17B08E93098CD8F004AC5C8 /* TopoText */; };
-		D1A2B16130B9BC1D00844A96 /* License.txt in Resources */ = {isa = PBXBuildFile; fileRef = D1A2B16030B9BC1D00844A96 /* License.txt */; };
 		D1B9C2613092272F009ABFBB /* tether-cli in CopyFiles */ = {isa = PBXBuildFile; fileRef = D1B9C259309226DB009ABFBB /* tether-cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D1F6429330937DC800CA0F25 /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = D1F6429230937DC800CA0F25 /* MCP */; };
 /* End PBXBuildFile section */
@@ -58,7 +57,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D1A2B16030B9BC1D00844A96 /* License.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		D1B9C22D30922573009ABFBB /* Tether.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tether.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1B9C23A30922575009ABFBB /* TetherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1B9C24430922575009ABFBB /* TetherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,7 +121,6 @@
 		D1B9C22430922573009ABFBB = {
 			isa = PBXGroup;
 			children = (
-				D1A2B16030B9BC1D00844A96 /* License.txt */,
 				D1A2B15D30B9B9B400844A96 /* scripts */,
 				D1B9C22F30922573009ABFBB /* Tether */,
 				D1B9C23D30922575009ABFBB /* TetherTests */,
@@ -301,7 +298,6 @@
 		D1B9C22B30922573009ABFBB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
-				D1A2B16130B9BC1D00844A96 /* License.txt in Resources */,
 			);
 		};
 		D1B9C23830922575009ABFBB /* Resources */ = {

@@ -1,0 +1,35 @@
+name: Build Tether (test)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15   # Matches your macOS 15.3 minimum deployment
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from Xcode build info
+        id: ver
+        run: |
+          VERSION=$(agvtool what-marketing-version -terse1)
+          if [ -z "$VERSION" ]; then
+            VERSION=$(xcodebuild -project Tether.xcodeproj -showBuildSettings 2>/dev/null | grep " MARKETING_VERSION" | head -1 | awk '{print $3}')
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build DMG
+        # Passes the extracted version to your script
+        run: ./Tether/scripts/build-dmg.sh "${{ steps.ver.outputs.version }}"
+
+      - name: Upload DMG as downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tether-${{ steps.ver.outputs.version }}
+          path: |
+            Tether/Tether-${{ steps.ver.outputs.version }}.dmg
+            Tether/Tether-${{ steps.ver.outputs.version }}.dmg.sha256
+          retention-days: 14
