@@ -8,21 +8,34 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-15   # Matches your macOS 15.3 minimum deployment
+    # Use macos-14 to guarantee we don't hit the Xcode "future format" error
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Read version from Xcode build info
+      - name: Read version from Xcode project
         id: ver
         run: |
-          VERSION=$(agvtool what-marketing-version -terse1)
+          echo "Extracting version directly from project.pbxproj..."
+          
+          # Read the version directly from the Xcode project file (grep the MARKETING_VERSION)
+          VERSION=$(grep -m 1 "MARKETING_VERSION = " Tether/Tether.xcodeproj/project.pbxproj | sed 's/.*MARKETING_VERSION = \(.*\);/\1/' | tr -d '[:space:]')
+          
+          # Fallback if the above fails: try reading from Info.plist
           if [ -z "$VERSION" ]; then
-            VERSION=$(xcodebuild -project Tether.xcodeproj -showBuildSettings 2>/dev/null | grep " MARKETING_VERSION" | head -1 | awk '{print $3}')
+            VERSION=$(defaults read "$PWD/Tether/Tether/Info.plist" CFBundleShortVersionString 2>/dev/null || true)
           fi
+          
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not find version."
+            exit 1
+          fi
+          
+          echo "Successfully found version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build DMG
-        # Passes the extracted version to your script
         run: ./Tether/scripts/build-dmg.sh "${{ steps.ver.outputs.version }}"
 
       - name: Upload DMG as downloadable artifact
